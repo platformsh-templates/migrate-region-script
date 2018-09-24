@@ -38,15 +38,36 @@ crete_or_update_variable() {
     VAR_VALUE=$3
     LEVEL=$4
     REDIRECT=${5:-/dev/tty}
+    REDIRECT=/dev/tty
     VISIBLE_BUILD=${6-false}
     VISIBLE_RUNTIME=${7-false}
     JSON=${8-false}
     SENSETIVE=${9-false}
+    ENABLED=${10-true}
+    INHERITABLE=${11-false}
+    ENV=${12-master}
 
-    tmp=$(platform variable:list --project=$PROJECT_ID --level=$LEVEL 2>/dev/null | grep $VAR_NAME | wc -l)
-    if [ "$tmp" -eq 0 ];then
-        platform variable:create --project=$PROJECT_ID --level=$LEVEL --name=$VAR_NAME --value=$VAR_VALUE --json=$JSON --sensitive=$SENSETIVE --prefix=none --visible-build=$VISIBLE_BUILD --visible-runtime=$VISIBLE_RUNTIME &> $REDIRECT
+    # wash double quotes
+    VAR_VALUE=$(echo $VAR_VALUE | sed 's/^"//g' | sed 's/"$//g')
+    # double quotes are coded to two double quotes, because we are using `--format tsv` to get variable value
+    # so we need to decode them back
+    VAR_VALUE=$(echo $VAR_VALUE | sed 's/""/"/g')
+
+    tmp=$(platform variable:list --project=$PROJECT_ID --level=$LEVEL --environment $ENV 2>/dev/null | grep "$VAR_NAME" | wc -l)
+    if [ "$tmp" -eq 0 ] ; then
+        platform variable:create --project=$PROJECT_ID --level=$LEVEL --name=$VAR_NAME --value="$VAR_VALUE" --json=$JSON --sensitive=$SENSETIVE --prefix=none --visible-build=$VISIBLE_BUILD --visible-runtime=$VISIBLE_RUNTIME --enabled=$ENABLED --inheritable=$INHERITABLE --environment=$ENV &> $REDIRECT
     else
-        platform variable:update --project=$PROJECT_ID --level=$LEVEL --value=$VAR_VALUE --json=$JSON --sensitive=$SENSETIVE --visible-build=$VISIBLE_BUILD --visible-runtime=$VISIBLE_RUNTIME $VAR_NAME &> $REDIRECT
+        platform variable:update --project=$PROJECT_ID --level=$LEVEL --value="$VAR_VALUE" --json=$JSON --sensitive=$SENSETIVE --visible-build=$VISIBLE_BUILD --visible-runtime=$VISIBLE_RUNTIME --enabled=$ENABLED --inheritable=$INHERITABLE --environment=$ENV $VAR_NAME &> $REDIRECT
     fi
+}
+#
+confirm_message() {
+    MESSAGE=$1
+
+    read -p "$MESSAGE (y/n)?: " choice
+    case "$choice" in
+      y|Y ) exit 0;;
+      n|N ) confirm_message "$MESSAGE";;
+      * ) confirm_message "$MESSAGE";;
+    esac
 }
