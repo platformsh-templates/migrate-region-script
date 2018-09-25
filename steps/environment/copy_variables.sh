@@ -29,7 +29,11 @@ done
 
 sensetive_vars=$(platform variable:list --project=$to_id --level=environment --environment=$env --format=tsv 2>/dev/null | tail -n +2 | grep 'Hidden: sensitive value' | awk '{print $1}')
 if [ ! -z "$sensetive_vars" ] ; then
-    vars=$(printf ", %s" "${sensetive_vars[@]}")
-    vars=${vars:2}
-    confirm_message "Please manually set following sensetive environment variable(s): \"$vars\""
+    list=""
+    for var in $sensetive_vars;
+    do
+        list=$(printf "$list\n- $var")
+    done
+    message=$(printf "Please manually set following sensitive environment variable(s):$list\nConfirm")
+    confirm_message "$message"
 fi

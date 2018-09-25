@@ -32,7 +32,11 @@ done
 
 sensetive_vars=$(platform variable:list --project $to_id --level project --format tsv | tail -n +2 | grep 'Hidden: sensitive value' | awk '{print $1}')
 if [ ! -z "$sensetive_vars" ] ; then
-    vars=$(printf ", %s" "${sensetive_vars[@]}")
-    vars=${vars:2}
-    confirm_message "Please manually set following sensetive project variable(s): \"$vars\""
+    list=""
+    for var in $sensetive_vars;
+    do
+        list=$(printf "$list\n- $var")
+    done
+    message=$(printf "Please manually set following sensitive project variable(s):$list\nConfirm")
+    confirm_message "$message"
 fi
