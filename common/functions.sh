@@ -60,14 +60,18 @@ crete_or_update_variable() {
         platform variable:update --project=$PROJECT_ID --level=$LEVEL --value="$VAR_VALUE" --json=$JSON --sensitive=$SENSETIVE --visible-build=$VISIBLE_BUILD --visible-runtime=$VISIBLE_RUNTIME --enabled=$ENABLED --inheritable=$INHERITABLE --environment=$ENV $VAR_NAME &> $REDIRECT
     fi
 }
-#
+
 confirm_message() {
     MESSAGE=$1
+    EXIT=${2:-true}
 
     read -p "$MESSAGE (y/n)?: " choice
     case "$choice" in
-      y|Y ) exit 0;;
-      n|N ) confirm_message "$MESSAGE";;
-      * ) confirm_message "$MESSAGE";;
+      y|Y )
+        if [ "$EXIT" = true ]; then
+            exit 0
+        fi;;
+      n|N ) confirm_message "$MESSAGE" $EXIT;;
+      * ) confirm_message "$MESSAGE" $EXIT;;
     esac
 }
