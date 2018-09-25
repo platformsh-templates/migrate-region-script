@@ -27,7 +27,7 @@ do
     is_json=$(platform variable:get --project $from_id --level project --format tsv -- "$variable" 2>/dev/null | grep is_json | sed -e "s/is_json${TAB}//g")
 
     echo "[$variable] ..."
-    crete_or_update_variable $to_id $variable "${value}" project /dev/tty $visible_build $visible_runtime $is_json $is_sensitive
+    create_or_update_variable $to_id $variable "${value}" project /dev/tty $visible_build $visible_runtime $is_json $is_sensitive
 done
 
 sensetive_vars=$(platform variable:list --project $to_id --level project --format tsv | tail -n +2 | grep 'Hidden: sensitive value' | awk '{print $1}')

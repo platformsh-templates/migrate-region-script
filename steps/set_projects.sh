@@ -37,7 +37,7 @@ mkdir -p .local
 echo $1 > .local/from_id
 echo $2 > .local/to_id
 
-crete_or_update_variable $1 "$MIGRATION_VAR_NAME" "$MIGRATION_VAL_FROM" project /dev/null
-crete_or_update_variable $2 "$MIGRATION_VAR_NAME" "$MIGRATION_VAL_TO" project /dev/null
+create_or_update_variable $1 "$MIGRATION_VAR_NAME" "$MIGRATION_VAL_FROM" project /dev/null
+create_or_update_variable $2 "$MIGRATION_VAR_NAME" "$MIGRATION_VAL_TO" project /dev/null
 
 echo "[OK] Platform.sh project ids were saved."

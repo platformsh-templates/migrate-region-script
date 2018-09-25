@@ -24,7 +24,7 @@ do
     is_inheritable=$(platform variable:get --project $from_id --level environment --environment $env --format tsv -- "$variable" 2>/dev/null | grep is_inheritable | sed -e "s/is_inheritable${TAB}//g")
 
     echo "[$variable] ..."
-    crete_or_update_variable $to_id $variable "${value}" environment /dev/tty false false $is_json $is_sensitive $is_enabled $is_inheritable $env
+    create_or_update_variable $to_id $variable "${value}" environment /dev/tty false false $is_json $is_sensitive $is_enabled $is_inheritable $env
 done
 
 sensetive_vars=$(platform variable:list --project=$to_id --level=environment --environment=$env --format=tsv 2>/dev/null | tail -n +2 | grep 'Hidden: sensitive value' | awk '{print $1}')
