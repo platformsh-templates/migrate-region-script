@@ -9,3 +9,4 @@ steps/set_projects.sh $1 $2
 steps/copy_project.sh
 steps/copy_environment.sh $3
 steps/copy_data.sh $3
+steps/project/transfer_domains.sh
