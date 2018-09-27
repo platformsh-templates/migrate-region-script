@@ -16,15 +16,19 @@ do
     value=$(platform variable:get --project $from_id --level project --format tsv -- "$variable" 2>/dev/null | grep value | sed -e "s/value${TAB}//g")
 
     is_sensitive=$(platform variable:get --project $from_id --level project --format tsv -- "$variable" 2>/dev/null | grep is_sensitive | sed -e "s/is_sensitive${TAB}//g")
+    is_json=$(platform variable:get --project $from_id --level project --format tsv -- "$variable" 2>/dev/null | grep is_json | sed -e "s/is_json${TAB}//g")
     if [ "$is_sensitive" = true ] ; then
-        value="<secret>"
+        if [ "$is_json" = true ] ; then
+            value="{\"value\": \"secret\"}"
+        else
+            value="<secret>"
+        fi
     fi
 
     [ -z "$value" ] && continue
 
     visible_build=$(platform variable:get --project $from_id --level project --format tsv -- "$variable" 2>/dev/null | grep visible_build | sed -e "s/visible_build${TAB}//g")
     visible_runtime=$(platform variable:get --project $from_id --level project --format tsv -- "$variable" 2>/dev/null | grep visible_runtime | sed -e "s/visible_runtime${TAB}//g")
-    is_json=$(platform variable:get --project $from_id --level project --format tsv -- "$variable" 2>/dev/null | grep is_json | sed -e "s/is_json${TAB}//g")
 
     echo "[$variable] ..."
     create_or_update_variable $to_id $variable "${value}" project /dev/tty $visible_build $visible_runtime $is_json $is_sensitive
