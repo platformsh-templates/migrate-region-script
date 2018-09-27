@@ -53,7 +53,7 @@ create_or_update_variable() {
     # so we need to decode them back
     VAR_VALUE=$(echo $VAR_VALUE | sed 's/""/"/g')
 
-    tmp=$(platform variable:list --project=$PROJECT_ID --level=$LEVEL --environment $ENV 2>/dev/null | grep "$VAR_NAME" | wc -l)
+    tmp=$(platform variable:list --project=$PROJECT_ID --level=$LEVEL --environment $ENV --format tsv 2>/dev/null | awk '{print $1}' | grep "^$VAR_NAME$" | wc -l)
     if [ "$tmp" -eq 0 ] ; then
         platform variable:create --project=$PROJECT_ID --level=$LEVEL --name=$VAR_NAME --value="$VAR_VALUE" --json=$JSON --sensitive=$SENSETIVE --prefix=none --visible-build=$VISIBLE_BUILD --visible-runtime=$VISIBLE_RUNTIME --enabled=$ENABLED --inheritable=$INHERITABLE --environment=$ENV &> $REDIRECT
     else
