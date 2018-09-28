@@ -21,8 +21,24 @@ done
 message=$(printf "Please point following domain(s):$list\nto\n$to_edge_host\nConfirm")
 confirm_message "$message" false
 
+
+lastDomain=${domains##*$'\n'}
+# Remove domains from old projects
 for domain in $domains;
 do
-    platform domain:delete --project=$from_id $domain --yes
-    platform domain:add --project=$to_id $domain --yes
+    wait="--no-wait"
+    if [ "$domain" = "$lastDomain" ] ; then
+        wait="--wait"
+    fi
+    platform domain:delete --project=$from_id $domain --yes $wait
 done
+# Add domains to new project
+for domain in $domains;
+do
+    wait="--no-wait"
+    if [ "$domain" = "$lastDomain" ] ; then
+        wait="--wait"
+    fi
+    platform domain:add --project=$to_id $domain --yes $wait
+done
+
