@@ -4,7 +4,7 @@ FROM_PROJECT_ID=$1
 TO_PROJECT_ID=$2
 ENVS=${3-master}
 
-steps/set_projects.sh $1 $2
+steps/set_projects.sh $FROM_PROJECT_ID $TO_PROJECT_ID
 [[ $? -ne 0 ]] && exit
 steps/copy_project.sh
 
