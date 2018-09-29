@@ -46,11 +46,16 @@ In order to migrate a project from one Platform.sh instance to another you need 
     ./steps/project/transfer_domains.sh
     ```
 
-Alternatively you can run following command, it will do all the steps above for `master` environment. And you can sync the rest environments manually:
+Alternatively you can run following command, it will do all the steps above for `master`, `stage` and `uat` environments:
 ```
-./migrate.sh <FROM_PROJECT_ID> <TO_PROJECT_ID> master
-./steps/copy_environment.sh stage
-./steps/copy_data.sh stage
+./migrate.sh <FROM_PROJECT_ID> <TO_PROJECT_ID> master,stage,uat
+```
+And you can sync the rest environments manually:
+```
+./steps/copy_environment.sh feature1
+./steps/copy_data.sh feature1
+./steps/copy_environment.sh feature2
+./steps/copy_data.sh feature2
 ```
 
 ## Manual actions
