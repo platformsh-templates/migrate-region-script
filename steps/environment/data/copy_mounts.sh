@@ -18,5 +18,6 @@ do
     rm -Rf $traget
 done
 
+# https://www.contextualcode.com/Blog/Managing-global-client-timezones-in-the-deployment-workflow
 platform project:variable:set --project=$to_id env:BUSINESS_HOURS_IGNORE 1
 platform redeploy --project=$to_id --environment=$env --yes
