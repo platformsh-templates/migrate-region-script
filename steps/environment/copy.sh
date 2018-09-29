@@ -24,7 +24,8 @@ if [ "$env" != "master" ] ; then
     platform environment:branch --project=$to_id --force -- $env $parent
 fi
 
-tmp=$(platform environment:list --project=$to_id --format tsv 2>/dev/null | grep "^$env\t" | wc -l)
+TAB=$'\t'
+tmp=$(platform environment:list --project=$to_id --format tsv 2>/dev/null | grep "^$env$TAB" | wc -l)
 if [ "$tmp" -eq 0 ] ; then
     echo "[ERROR] Unable to create \"$env\" environment in \"to\" project"
     exit 1
