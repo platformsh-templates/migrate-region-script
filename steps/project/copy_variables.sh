@@ -13,10 +13,9 @@ for variable in $vars;
 do
     [ "$variable" = "$MIGRATION_VAR_NAME" ] && continue;
 
-    value=$(platform variable:get --project $from_id --level project --format tsv -- "$variable" 2>/dev/null | grep value | sed -e "s/value${TAB}//g")
-
-    is_sensitive=$(platform variable:get --project $from_id --level project --format tsv -- "$variable" 2>/dev/null | grep is_sensitive | sed -e "s/is_sensitive${TAB}//g")
-    is_json=$(platform variable:get --project $from_id --level project --format tsv -- "$variable" 2>/dev/null | grep is_json | sed -e "s/is_json${TAB}//g")
+    value=$(platform variable:get --project $from_id --level project --property value "$variable" 2>/dev/null)
+    is_sensitive=$(platform variable:get --project $from_id --level project --property is_sensitive "$variable" 2>/dev/null)
+    is_json=$(platform variable:get --project $from_id --level project --property is_json "$variable" 2>/dev/null)
     if [ "$is_sensitive" = true ] ; then
         if [ "$is_json" = true ] ; then
             value="{\"value\": \"secret\"}"
@@ -27,8 +26,8 @@ do
 
     [ -z "$value" ] && continue
 
-    visible_build=$(platform variable:get --project $from_id --level project --format tsv -- "$variable" 2>/dev/null | grep visible_build | sed -e "s/visible_build${TAB}//g")
-    visible_runtime=$(platform variable:get --project $from_id --level project --format tsv -- "$variable" 2>/dev/null | grep visible_runtime | sed -e "s/visible_runtime${TAB}//g")
+    visible_build=$(platform variable:get --project $from_id --level project --property visible_build "$variable" 2>/dev/null)
+    visible_runtime=$(platform variable:get --project $from_id --level project --property visible_runtime "$variable" 2>/dev/null)
 
     echo "[$variable] ..."
     create_or_update_variable $to_id $variable "${value}" project /dev/tty $visible_build $visible_runtime $is_json $is_sensitive

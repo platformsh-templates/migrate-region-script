@@ -20,12 +20,12 @@ check_project_ids() {
     from_id=$(get_from_project_id)
     to_id=$(get_to_project_id)
 
-    tmp=$(platform variable:get --level project --project $from_id --format tsv $MIGRATION_VAR_NAME | grep value | awk '{print $2}')
+    tmp=$(platform variable:get --level project --project $from_id $MIGRATION_VAR_NAME --property value)
     if [ "$tmp" != "$MIGRATION_VAL_FROM" ]; then
         echo "[ERROR] \"$from_id\" is invalid "from" project. Please run ./step/set_projects.sh <FROM_ID> <TO_ID>"
         exit 1
     fi
-    tmp=$(platform variable:get --level project --project $to_id --format tsv $MIGRATION_VAR_NAME | grep value | awk '{print $2}')
+    tmp=$(platform variable:get --level project --project $to_id $MIGRATION_VAR_NAME --property value)
     if [ "$tmp" != "$MIGRATION_VAL_TO" ]; then
         echo "[ERROR] \"$to_id\" is invalid "to" project. Please run ./step/set_projects.sh <FROM_PROJECT_ID> <TO_PROJECT_ID>"
         exit 1
