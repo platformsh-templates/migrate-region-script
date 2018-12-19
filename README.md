@@ -65,7 +65,8 @@ Please note, this script will ask to make some manual actions:
 3. Point project domains to new `edge_hostname`
 
 But there are some other things you need to set up manually, and there will be no prompt for them in the script:
-1. Setup non admin users
-2. Update HTTP access control settings (most likely for non master environments)
-3. Script takes care only about `database` database relation. If you are using another name for it (or have multiple database relations) you need to tune [copy_db.sh](https://gitlab.com/contextualcode/project-migration-platform.sh/blob/master/steps/environment/data/copy_db.sh)
-4. Copy persistent data for additional services (Solr/Elasticsearch/etc)
+1. Setup [integrations](https://docs.platform.sh/administration/integrations.html) on the new project (health notifications/web hooks/etc)
+2. Setup non admin users
+3. Update HTTP access control settings (most likely for non master environments)
+4. Script takes care only about `database` database relation. If you are using another name for it (or have multiple database relations) you need to tune [copy_db.sh](https://gitlab.com/contextualcode/project-migration-platform.sh/blob/master/steps/environment/data/copy_db.sh)
+5. Copy persistent data for additional services (Solr/Elasticsearch/etc)
