@@ -48,8 +48,8 @@ do
     platform domain:add --project=$to_id $domain --yes $wait
 done
 
-message=$(printf "Please point following domain(s):$list\nto\n$to_edge_host\nConfirm")
-confirm_message "$message" false
-
-# Redeploy to generate SSL certs
-redeploy $to_id master
+message=$(printf "Please point following domain(s):$list\nto\n$to_edge_host\n\nAlternatively, you can change DNS later.\n\nConfirm DNS change (y/n)?")
+read -p "$message" choice
+case "$choice" in
+  y|Y ) redeploy $to_id master;;
+esac
