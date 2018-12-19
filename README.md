@@ -51,6 +51,7 @@ Alternatively, you can run all those steps manually:
     ```
     ./steps/project/transfer_domains.sh
     ```
+    Script will ask you to point project domains to edge host of new Platform.sh instance. You can do this later, but in this case, additional manual redeploy will be required to update SSL certificates. 
 
 At any point you can sync additional environments manually:
 ```

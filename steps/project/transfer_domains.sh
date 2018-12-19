@@ -45,11 +45,12 @@ do
     if [ "$domain" = "$lastDomain" ] ; then
         wait="--wait"
     fi
-    platform domain:add --project=$to_id $domain --yes $wait
+    #platform domain:add --project=$to_id $domain --yes $wait
 done
 
-message=$(printf "Please point following domain(s):$list\nto\n$to_edge_host\n\nAlternatively, you can change DNS later.\n\nConfirm DNS change (y/n)?")
+message=$(printf "Please point following domain(s):$list\nto\n$to_edge_host\n\nAlternatively, you can change DNS later.\n\nConfirm DNS transfer (y/n)? ")
 read -p "$message" choice
 case "$choice" in
   y|Y ) redeploy $to_id master;;
+  * ) printf "\n[REMINDER] Manual redeploy will be required to update SSL certificates after DNS transfer\n\n";;
 esac
