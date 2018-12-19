@@ -15,7 +15,13 @@ domainX.com  =>
 ``` 
 
 ## Usages
-In order to migrate a project from one Platform.sh instance to another you need to do following steps:
+You can migrate your project from one Platform.sh instance to another (including multiple environments), just by running this command:
+```
+./migrate.sh <FROM_PROJECT_ID> <TO_PROJECT_ID> master,stage,uat
+```
+It will setup Platform.sh project IDs, copy project, and copy `master`, `stage` and `uat` environments.
+
+Alternatively, you can run all those steps manually:
 1. Setup Platform.sh project IDs (please ignore prompts to redeploy the project): 
 
     ```
@@ -46,11 +52,7 @@ In order to migrate a project from one Platform.sh instance to another you need 
     ./steps/project/transfer_domains.sh
     ```
 
-Alternatively you can run following command, it will do all the steps above for `master`, `stage` and `uat` environments:
-```
-./migrate.sh <FROM_PROJECT_ID> <TO_PROJECT_ID> master,stage,uat
-```
-And you can sync the rest environments manually:
+At any point you can sync additional environments manually:
 ```
 ./steps/copy_environment.sh feature1
 ./steps/copy_data.sh feature1
