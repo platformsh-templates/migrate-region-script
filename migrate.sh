@@ -16,4 +16,7 @@ for ENV in "${ENVS_ARRAY[@]}"; do
     steps/copy_data.sh $ENV
 done
 
-steps/project/transfer_domains.sh
+read -p "Would you like to transfer domains now (y/n)?: " choice
+case "$choice" in
+  y|Y ) steps/project/transfer_domains.sh;;
+esac
