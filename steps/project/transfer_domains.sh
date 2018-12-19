@@ -52,6 +52,4 @@ message=$(printf "Please point following domain(s):$list\nto\n$to_edge_host\nCon
 confirm_message "$message" false
 
 # Redeploy to generate SSL certs
-# https://www.contextualcode.com/Blog/Managing-global-client-timezones-in-the-deployment-workflow
-platform project:variable:set --project=$to_id env:BUSINESS_HOURS_IGNORE 1
-platform redeploy --project=$to_id --environment=master --yes
+redeploy $to_id master

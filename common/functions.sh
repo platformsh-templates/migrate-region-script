@@ -75,3 +75,12 @@ confirm_message() {
       * ) confirm_message "$MESSAGE" $EXIT;;
     esac
 }
+
+redeploy() {
+    PROJECT_ID=$1
+    ENV_TO_REDEPLOY=${2-master}
+    # https://www.contextualcode.com/Blog/Managing-global-client-timezones-in-the-deployment-workflow
+    platform project:variable:set --project=$PROJECT_ID env:BUSINESS_HOURS_IGNORE 1 > /dev/null 2>&1
+    platform redeploy --project=$PROJECT_ID --environment=$ENV_TO_REDEPLOY --yes
+    platform project:variable:delete --project=$PROJECT_ID env:BUSINESS_HOURS_IGNORE --yes > /dev/null 2>&1
+}
