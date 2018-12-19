@@ -16,7 +16,7 @@ domainX.com  =>
 
 ## Usages
 In order to migrate a project from one Platform.sh instance to another you need to do following steps:
-1. Setup Platform.sh project IDs: 
+1. Setup Platform.sh project IDs (please ignore prompts to redeploy the project): 
 
     ```
     ./steps/set_projects.sh <FROM_PROJECT_ID> <TO_PROJECT_ID>
