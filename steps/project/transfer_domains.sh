@@ -45,7 +45,7 @@ do
     if [ "$domain" = "$lastDomain" ] ; then
         wait="--wait"
     fi
-    #platform domain:add --project=$to_id $domain --yes $wait
+    platform domain:add --project=$to_id $domain --yes $wait
 done
 
 message=$(printf "Please point following domain(s):$list\nto\n$to_edge_host\n\nAlternatively, you can change DNS later.\n\nConfirm DNS transfer (y/n)? ")
