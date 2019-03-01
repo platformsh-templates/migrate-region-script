@@ -48,6 +48,10 @@ do
     platform domain:add --project=$to_id $domain --yes $wait
 done
 
+# Default domain
+DEFAULT_DOMAIN=$(platform project:info --project=$from_id -- default_domain)
+platform project:info --project=$to_id -- default_domain $DEFAULT_DOMAIN
+
 message=$(printf "Please point following domain(s):$list\nto\n$to_edge_host\n\nAlternatively, you can change DNS later.\n\nConfirm DNS transfer (y/n)? ")
 read -p "$message" choice
 case "$choice" in
