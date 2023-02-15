@@ -21,7 +21,6 @@ check_project_ids() {
     to_id=$(get_to_project_id)
 
     tmp=$(platform variable:get --level project --project $from_id $MIGRATION_VAR_NAME --property value)
-
     if [ "$tmp" != "$MIGRATION_VAL_FROM" ]; then
         echo "[ERROR] \"$from_id\" is invalid "from" project. Please run ./steps/set_projects.sh <FROM_ID> <TO_ID>"
         exit 1
@@ -76,7 +75,8 @@ confirm_message() {
 
 redeploy() {
     PROJECT_ID=$1
-    ENV_TO_REDEPLOY=$2
+    DEFAULT_BRANCH=$(platform project:info --project=$PROJECT_ID -- default_branch)
+    ENV_TO_REDEPLOY=${2:-$DEFAULT_BRANCH}
     # https://www.contextualcode.com/Blog/Managing-global-client-timezones-in-the-deployment-workflow
 #    platform project:variable:set --project=$PROJECT_ID env:BUSINESS_HOURS_IGNORE 1 > /dev/null 2>&1
     platform redeploy --project=$PROJECT_ID --environment=$ENV_TO_REDEPLOY --yes

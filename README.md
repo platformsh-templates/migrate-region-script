@@ -44,13 +44,15 @@ Alternatively, you can run all those steps manually:
     ./steps/copy_environment.sh main
     ./steps/copy_environment.sh stage
     ``` 
-4. Sync data (mounts, DB) for each environment:
+4. Sync data (mounts, DB) for an environment:
 
     ```
-    ./steps/copy_data.sh main
-    ./steps/copy_data.sh stage
+    ./steps/copy_data.sh main app
+    ./steps/copy_data.sh stage app
     ```
     
+> note: please provide environment (main | stage) and service (app) having the database relationship. 
+
 5. Remove all assigned domains from old project and assign them to new one:
 
     ```
@@ -61,10 +63,11 @@ Alternatively, you can run all those steps manually:
 At any point you can sync additional environments manually:
 ```
 ./steps/copy_environment.sh feature1
-./steps/copy_data.sh feature1
+./steps/copy_data.sh feature1 app
 ./steps/copy_environment.sh feature2
-./steps/copy_data.sh feature2
+./steps/copy_data.sh feature2 app
 ```
+> note: For `copy_data.sh script`` please provide environment (feature1 | feature2) and service (app) having the database relationship.
 
 ## Manual actions
 Please note, this script will ask to make some manual actions:
@@ -73,8 +76,10 @@ Please note, this script will ask to make some manual actions:
 3. Point project domains to new `edge_hostname`
 
 But there are some other things you need to set up manually, and there will be no prompt for them in the script:
-1. Setup [integrations](https://docs.platform.sh/administration/integrations.html) on the new project (health notifications/web hooks/etc)
+1. Integration for Github is done, for other [integrations](https://docs.platform.sh/administration/integrations.html) on the new project, please setup it manually (health notifications/web hooks/etc)
 2. Setup non admin users
-3. Update HTTP access control settings (most likely for non master environments)
-4. Script takes care only about `database` database relation. If you are using another name for it (or have multiple database relations) you need to tune [copy_db.sh](https://gitlab.com/contextualcode/project-migration-platform.sh/blob/master/steps/environment/data/copy_db.sh)
-5. Copy persistent data for additional services (Solr/Elasticsearch/etc)
+3. Update HTTP access control settings (most likely for non production environments)
+4. Copy persistent data for additional services (Solr/Elasticsearch/etc)
+
+[comment]: <> FHK: done as i add a new parameter to the copy_data.sh script to define which service contains the db, and then, platform db:dump do the trick to retrieve the corresponding relationship
+[comment]: <> (4. Script takes care only about `database` database relation. If you are using another name for it &#40;or have multiple database relations&#41; you need to tune [copy_db.sh]&#40;https://gitlab.com/contextualcode/project-migration-platform.sh/blob/master/steps/environment/data/copy_db.sh&#41;)

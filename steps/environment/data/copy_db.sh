@@ -2,11 +2,12 @@
 source common/functions.sh
 
 check_project_ids
-
-env=$1
-app=$2
 from_id=$(get_from_project_id)
 to_id=$(get_to_project_id)
+
+DEFAULT_BRANCH=$(platform project:info --project=$from_id -- default_branch)
+env=${1:-$DEFAULT_BRANCH}
+app=$2
 
 # Database
 mkdir -p .local/tmp

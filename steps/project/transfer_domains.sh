@@ -50,11 +50,12 @@ done
 
 # Default domain
 DEFAULT_DOMAIN=$(platform project:info --project=$from_id -- default_domain)
+DEFAULT_BRANCH=$(platform project:info --project=$from_id -- default_branch)
 platform project:info --project=$to_id -- default_domain $DEFAULT_DOMAIN
 
 message=$(printf "Please point following domain(s):$list\nto\n$to_edge_host\n\nAlternatively, you can change DNS later.\n\nConfirm DNS transfer (y/n)? ")
 read -p "$message" choice
 case "$choice" in
-  y|Y ) redeploy $to_id master;;
+  y|Y ) redeploy $to_id $DEFAULT_BRANCH;;
   * ) printf "\n[REMINDER] Manual redeploy will be required to update SSL certificates after DNS transfer\n\n";;
 esac

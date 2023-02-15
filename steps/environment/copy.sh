@@ -2,10 +2,11 @@
 source common/functions.sh
 
 check_project_ids
-
-env=$1
 from_id=$(get_from_project_id)
 to_id=$(get_to_project_id)
+
+DEFAULT_BRANCH=$(platform project:info --project=$from_id -- default_branch)
+env=${1:-$DEFAULT_BRANCH}
 
 tmp=$(platform environment:list --project=$from_id --format tsv 2>/dev/null | grep Active | grep $env | wc -l)
 if [ "$tmp" -eq 0 ] ; then

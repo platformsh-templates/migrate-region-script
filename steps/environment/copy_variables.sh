@@ -2,10 +2,11 @@
 source common/functions.sh
 
 check_project_ids
-
-env=$1
 from_id=$(get_from_project_id)
 to_id=$(get_to_project_id)
+
+DEFAULT_BRANCH=$(platform project:info --project=$from_id -- default_branch)
+env=${1:-$DEFAULT_BRANCH}
 
 TAB=$'\t'
 vars=$(platform variable:list --project $from_id --level environment --environment $env --format tsv | tail -n +2 | awk '{print $1}')
