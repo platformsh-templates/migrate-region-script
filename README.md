@@ -17,9 +17,9 @@ domainX.com  =>
 ## Usages
 You can migrate your project from one Platform.sh instance to another (including multiple environments), just by running this command:
 ```
-./source fleet_migrate_region.sh && migrate_project_to_region
+./migrate.sh
 ```
-The answer questions to define:
+Then answer questions to define:
 - Which project ID you want to migrate
 - On which region do you want to migrate 
 - In which organization do you want this new project to be part of
@@ -41,13 +41,13 @@ Alternatively, you can run all those steps manually:
 3. For each environment you need to: copy it, update its settings, copy environment variables and copy GIT branches:  
 
     ```
-    ./steps/copy_environment.sh master
+    ./steps/copy_environment.sh main
     ./steps/copy_environment.sh stage
     ``` 
 4. Sync data (mounts, DB) for each environment:
 
     ```
-    ./steps/copy_data.sh master
+    ./steps/copy_data.sh main
     ./steps/copy_data.sh stage
     ```
     
