@@ -10,5 +10,5 @@ to_id=$(get_to_project_id)
 
 # Database
 mkdir -p .local/tmp
-platform db:dump --project=$from_id --environment=$env --relationship=database --file=.local/tmp/dump.sql --yes --app=$app
-platform db:sql --project=$to_id --environment=$env --relationship=database --app=$app < .local/tmp/dump.sql
+platform db:dump --project=$from_id --environment=$env --file=.local/tmp/dump.sql --yes --app=$app
+platform db:sql --project=$to_id --environment=$env --app=$app < .local/tmp/dump.sql

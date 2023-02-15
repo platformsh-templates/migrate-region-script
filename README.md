@@ -1,5 +1,5 @@
 # Platform.sh Project Migration
-This utility allows very ealsy to transfer project from one Platform.sh instance to another.
+This utility allows very ealsy to transfer project from one Platform.sh instance/region to another and change organization.
 
 ## Requirements
 1. You need to have installed [Platform.sh CLI](https://docs.platform.sh/gettingstarted/cli.html) 
@@ -17,9 +17,14 @@ domainX.com  =>
 ## Usages
 You can migrate your project from one Platform.sh instance to another (including multiple environments), just by running this command:
 ```
-./migrate.sh <FROM_PROJECT_ID> <TO_PROJECT_ID> master,stage,uat
+./source fleet_migrate_region.sh && migrate_project_to_region
 ```
-It will setup Platform.sh project IDs, copy project, and copy `master`, `stage` and `uat` environments.
+The answer questions to define:
+- Which project ID you want to migrate
+- On which region do you want to migrate 
+- In which organization do you want this new project to be part of
+- Which app (multi-application project) contains database (use `app` if single application)
+- your Github API Token
 
 Alternatively, you can run all those steps manually:
 1. Setup Platform.sh project IDs (please ignore prompts to redeploy the project): 

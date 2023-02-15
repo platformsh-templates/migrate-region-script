@@ -13,7 +13,9 @@ do
     traget="./.local/tmp/mounts/$mount"
     echo $traget
     mkdir -p $traget
+    printf "\Downloading mounts from project $from_id"
     platform mount:download --project=$from_id --environment=$env --mount=$mount --target=$traget --yes
+    printf "\nUploading mounts to project $to_id"
     platform mount:upload --project=$to_id --environment=$env --mount=$mount --source=$traget --yes
     rm -Rf $traget
 done
