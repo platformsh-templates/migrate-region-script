@@ -13,7 +13,8 @@ echo ""
 echo "---------------------------------------------------------------------------------------------------------"
 echo "Copying project admin users ..."
 echo "---------------------------------------------------------------------------------------------------------"
-./steps/project/copy_admin_users.sh
+#./steps/project/copy_admin_users.sh
+echo "TODO uncomment line 16 in steps/copy_project.sh file"
 echo ""
 echo "---------------------------------------------------------------------------------------------------------"
 echo "Copying project variables ..."

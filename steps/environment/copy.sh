@@ -3,7 +3,7 @@ source common/functions.sh
 
 check_project_ids
 
-env=${1:-master}
+env=$1
 from_id=$(get_from_project_id)
 to_id=$(get_to_project_id)
 
@@ -19,9 +19,10 @@ if [ "$tmp" -gt 0 ] ; then
     exit 1
 fi
 
-if [ "$env" != "master" ] ; then
+ENV_TYPE=$(platform project:curl -p $from_id /environments/$env | jq -r '.type')
+if [ "$ENV_TYPE" != production  ] ; then
     parent=$(platform environment:info --project=$from_id --environment=$env -- parent)
-    platform environment:branch --project=$to_id --force -- $env $parent
+    platform environment:branch --project=$to_id --force --no-clone-parent -- $env $parent
 fi
 
 TAB=$'\t'

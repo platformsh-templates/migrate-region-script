@@ -3,7 +3,7 @@ source common/functions.sh
 
 check_project_ids
 
-env=${1:-master}
+env=$1
 from_id=$(get_from_project_id)
 to_id=$(get_to_project_id)
 

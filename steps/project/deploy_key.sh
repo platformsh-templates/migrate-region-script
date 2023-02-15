@@ -8,4 +8,4 @@ echo ""
 platform project:info --project $to_id repository.client_ssh_key
 echo ""
 
-confirm_message "Please set new deploy key in GitHub/GitLab/Bitbucket/etc (alternatively, you can ignore this step if no submodules are in use). Continue"
+#confirm_message "Please set new deploy key in GitHub/GitLab/Bitbucket/etc (alternatively, you can ignore this step if no submodules are in use). Continue"

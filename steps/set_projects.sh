@@ -19,13 +19,14 @@ if [ "$1" = "$2" ] ; then
     exit 1
 fi
 
-status=$(platform project:info --project $1 status 2>/dev/null)
-if [ "$status" != "active" ]; then
+status=$(platform project:info --project $1 status.code 2>/dev/null)
+
+if [ "$status" != "provisioned" ]; then
     echo "[ERROR] \"$1\" does not seems to be valid Platform.sh project id, or you do not have access to it"
     has_error=true
 fi
-status=$(platform project:info --project $2 status 2>/dev/null)
-if [ "$status" != "active" ]; then
+status=$(platform project:info --project $2 status.code 2>/dev/null)
+if [ "$status" != "provisioned" ]; then
     echo "[ERROR] \"$2\" does not seems to be valid Platform.sh project id, or you do not have access to it"
     has_error=true
 fi
