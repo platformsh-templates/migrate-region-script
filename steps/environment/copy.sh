@@ -10,7 +10,7 @@ env=${1:-$DEFAULT_BRANCH}
 
 tmp=$(platform environment:list --project=$from_id --format tsv 2>/dev/null | grep Active | grep $env | wc -l)
 if [ "$tmp" -eq 0 ] ; then
-    echo "[ERROR] \"$env\" environment does not exist in \"from\" project"
+    echo "[ERROR] \"$env\" environment is not active in \"from\" project"
     exit 1
 fi
 
@@ -20,11 +20,11 @@ if [ "$tmp" -gt 0 ] ; then
     exit 1
 fi
 
-ENV_TYPE=$(platform project:curl -p $from_id /environments/$env | jq -r '.type')
-if [ "$ENV_TYPE" != production  ] ; then
-    parent=$(platform environment:info --project=$from_id --environment=$env -- parent)
-    platform environment:branch --project=$to_id --force --no-clone-parent -- $env $parent
-fi
+#ENV_TYPE=$(platform project:curl -p $from_id /environments/$env | jq -r '.type')
+#if [ "$ENV_TYPE" != production  ] ; then
+#    parent=$(platform environment:info --project=$from_id --environment=$env -- parent)
+#    platform environment:branch --project=$to_id --force --no-clone-parent -- $env $parent
+#fi
 
 TAB=$'\t'
 tmp=$(platform environment:list --project=$to_id --format tsv 2>/dev/null | grep "^$env$TAB" | wc -l)
