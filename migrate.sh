@@ -134,3 +134,5 @@ read -p "Would you like to transfer domains now (y/n)?: " choice
 case "$choice" in
   y|Y ) steps/project/transfer_domains.sh;
 esac
+
+printf "New project id %s successfully created.\n" "${P2_PROJECT_ID}"
