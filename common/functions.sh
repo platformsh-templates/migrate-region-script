@@ -49,10 +49,15 @@ create_or_update_variable() {
     # so we need to decode them back
     VAR_VALUE=$(echo $VAR_VALUE | sed 's/""/"/g')
 
+    if [[ ! "${VAR_VALE}" =~ ":" ]]; then
+      # we just need a flag to tell us whether or not to include the option
+      PREFIXNONE="true"
+    fi
+
     tmp=$(platform variable:list --project=$PROJECT_ID --level=$LEVEL --format tsv 2>/dev/null | awk '{print $1}' | grep "^$VAR_NAME$" | wc -l)
 
     if [ "$tmp" -eq 0 ] ; then
-        platform variable:create --project=$PROJECT_ID --level=$LEVEL --name=$VAR_NAME --value="$VAR_VALUE" --json=$JSON --sensitive=$SENSITIVE --prefix=none --visible-build=$VISIBLE_BUILD --visible-runtime=$VISIBLE_RUNTIME &> $REDIRECT
+        platform variable:create --project=$PROJECT_ID --level=$LEVEL --name=$VAR_NAME --value="$VAR_VALUE" --json=$JSON --sensitive=$SENSITIVE ${PREFIXNONE:+--prefix=none} --visible-build=$VISIBLE_BUILD --visible-runtime=$VISIBLE_RUNTIME &> $REDIRECT
     else
         platform variable:update --project=$PROJECT_ID --level=$LEVEL --value="$VAR_VALUE" --json=$JSON --sensitive=$SENSITIVE --visible-build=$VISIBLE_BUILD --visible-runtime=$VISIBLE_RUNTIME $VAR_NAME &> $REDIRECT
     fi
