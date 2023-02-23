@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
+working_dir=$(pwd)
+printf "> Enter project ID to migrate: "
+read -r P1_PROJECT_ID
 
-echo "> Enter project ID to migrate:"
-printf ": "
-read P1_PROJECT_ID
-
-echo "\n> The region where the new project will be hosted
+echo "> Select the region where the new project will be hosted
 [au.platform.sh  ] Sydney, Australia (AWS) [867 gC02eq/kWh]
 [au-2.platform.sh] Sydney, Australia (AZURE) [867 gC02eq/kWh]
 [ca-1.platform.sh] Montreal, Canada (AWS) [27 gC02eq/kWh]
@@ -69,7 +68,7 @@ printf "\n"
 # create integration (github api token) on P2 project and catch errors
 (
   set -e
-  INTEGRATION=$(platform integration:add --type=github --project=$P2_PROJECT_ID --repository=$P1_INTEGRATION_REPO --token=$GITHUB_API_TOKEN --no-interaction -vvv)
+  INTEGRATION=$(platform integration:add --type=github --project="$P2_PROJECT_ID" --repository="$P1_INTEGRATION_REPO" --token="$GITHUB_API_TOKEN" --no-interaction -vvv)
   printf "\nplatform integration:add --type=github --project=$P2_PROJECT_ID --repository=$P1_INTEGRATION_REPO --token=$GITHUB_API_TOKEN --no-interaction -vvv"
   printf "\nP2 Integration is $INTEGRATION"
 )
