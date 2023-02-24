@@ -25,6 +25,7 @@ check_project_ids() {
         echo "[ERROR] \"$from_id\" is invalid "from" project. Please run ./steps/set_projects.sh <FROM_ID> <TO_ID>"
         exit 1
     fi
+
     tmp=$(platform variable:get --level project --project $to_id $MIGRATION_VAR_NAME --property value)
     if [ "$tmp" != "$MIGRATION_VAL_TO" ]; then
         echo "[ERROR] \"$to_id\" is invalid "to" project. Please run ./steps/set_projects.sh <FROM_PROJECT_ID> <TO_PROJECT_ID>"
@@ -42,6 +43,9 @@ create_or_update_variable() {
     VISIBLE_RUNTIME=${7-false}
     JSON=${8-false}
     SENSITIVE=${9-false}
+    ENABLED=${10-true}
+    INHERITABLE=${11-false}
+    ENV=${12}
 
     # wash double quotes
     VAR_VALUE=$(echo $VAR_VALUE | sed 's/^"//g' | sed 's/"$//g')
@@ -49,17 +53,31 @@ create_or_update_variable() {
     # so we need to decode them back
     VAR_VALUE=$(echo $VAR_VALUE | sed 's/""/"/g')
 
-    if [[ ! "${VAR_VALE}" =~ ":" ]]; then
+    if [[ ! "${VAR_VALUE}" =~ ":" ]]; then
       # we just need a flag to tell us whether or not to include the option
       PREFIXNONE="true"
     fi
 
-    tmp=$(platform variable:list --project=$PROJECT_ID --level=$LEVEL --format tsv 2>/dev/null | awk '{print $1}' | grep "^$VAR_NAME$" | wc -l)
+    ENV_PARAM=""
+    if [[ "${ENV}" ]]; then
+      # we just need a flag to tell us whether or not to include the option
+      ENV_PARAM=" --environment=$ENV"
+    fi
+
+    # Can't add ENABLED and INHERITABLE params if level=environment
+    ENABLED_PARAM=""
+    INHERITABLE_PARAM=""
+    if [ "$LEVEL" == "environment" ]; then
+      ENABLED_PARAM="--enabled=$ENABLED"
+      INHERITABLE_PARAM="--inheritable=$INHERITABLE"
+    fi
+
+    tmp=$(platform variable:list --project=$PROJECT_ID --level=$LEVEL $ENV_PARAM --format tsv 2>/dev/null | awk '{print $1}' | grep "^$VAR_NAME$" | wc -l)
 
     if [ "$tmp" -eq 0 ] ; then
-        platform variable:create --project=$PROJECT_ID --level=$LEVEL --name=$VAR_NAME --value="$VAR_VALUE" --json=$JSON --sensitive=$SENSITIVE ${PREFIXNONE:+--prefix=none} --visible-build=$VISIBLE_BUILD --visible-runtime=$VISIBLE_RUNTIME &> $REDIRECT
+        platform variable:create --project=$PROJECT_ID --level=$LEVEL --name=$VAR_NAME --value="$VAR_VALUE" --json=$JSON ${SENSITIVE_PARAM} ${PREFIXNONE:+--prefix=none} --visible-build=$VISIBLE_BUILD --visible-runtime=$VISIBLE_RUNTIME --sensitive=$SENSITIVE ${ENABLED_PARAM} ${INHERITABLE_PARAM} $ENV_PARAM &> $REDIRECT
     else
-        platform variable:update --project=$PROJECT_ID --level=$LEVEL --value="$VAR_VALUE" --json=$JSON --sensitive=$SENSITIVE --visible-build=$VISIBLE_BUILD --visible-runtime=$VISIBLE_RUNTIME $VAR_NAME &> $REDIRECT
+        platform variable:update --project=$PROJECT_ID --level=$LEVEL --value="$VAR_VALUE" --json=$JSON ${SENSITIVE_PARAM} --visible-build=$VISIBLE_BUILD --visible-runtime=$VISIBLE_RUNTIME --sensitive=$SENSITIVE ${ENABLED_PARAM} ${INHERITABLE_PARAM} $ENV_PARAM $VAR_NAME &> $REDIRECT
     fi
 }
 

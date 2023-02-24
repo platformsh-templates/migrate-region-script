@@ -80,29 +80,6 @@ printf "Removing local temp copy of repository... "
 rm -rf ./.local/source_code
 echo "Done."
 
-# get P1 integration repo
-P1_INTEGRATION_REPO=$(platform project:curl -p "$P1_PROJECT_ID" /integrations | jq -r '.[]|select(.type | contains("github"))' | jq '.repository'| tr -d '"')
-P1_INTEGRATION_ID=$(platform project:curl -p "$P1_PROJECT_ID" /integrations | jq -r '.[]|select(.type | contains("github"))' | jq '.id')
-printf "P1 Integration repo is %s and ID is %s\n" "${P1_INTEGRATION_REPO}" "${P1_INTEGRATION_ID}"
-printf "P1 integration URL: %s\n" "${P1_INTEGRATION_REPO}"
-
-# remove P1 integration
-#TODO uncomment if you need to remove the integration on P1 project
-# REMOVE_INTEGRATION=$(platform integration:delete -p $P1_PROJECT_ID --yes $P1_INTEGRATION_ID)
-
-# create integration (github api token) on P2 project and catch errors
-(
-  set -e
-  INTEGRATION=$(platform integration:add --type=github --project="$P2_PROJECT_ID" --repository="$P1_INTEGRATION_REPO" --token="$GITHUB_API_TOKEN" --no-interaction -vvv)
-  printf "\nplatform integration:add --type=github --project=$P2_PROJECT_ID --repository=$P1_INTEGRATION_REPO --token=$GITHUB_API_TOKEN --no-interaction -vvv"
-  printf "\nP2 Integration is $INTEGRATION"
-)
-errorCode=$?
-if [ $errorCode -ne 0 ]; then
-  echo "We have an error"
-  printf "\nP2 Integration already exists"
-fi
-
 # get P1 project envs
 ENV_LIST=$(platform environment:list -p "$P1_PROJECT_ID" --pipe)
 P1_ENVS=($ENV_LIST)
@@ -130,9 +107,32 @@ for ENV in "${P1_ENVS[@]}"; do
     fi
 done
 
-read -p "Would you like to transfer domains now (y/n)?: " choice
+# get P1 integration repo
+P1_INTEGRATION_REPO=$(platform project:curl -p "$P1_PROJECT_ID" /integrations | jq -r '.[]|select(.type | contains("github"))' | jq '.repository'| tr -d '"')
+P1_INTEGRATION_ID=$(platform project:curl -p "$P1_PROJECT_ID" /integrations | jq -r '.[]|select(.type | contains("github"))' | jq '.id')
+printf "P1 Integration repo is %s and ID is %s\n" "${P1_INTEGRATION_REPO}" "${P1_INTEGRATION_ID}"
+printf "P1 integration URL: %s\n" "${P1_INTEGRATION_REPO}"
+
+# remove P1 integration
+#TODO uncomment if you need to remove the integration on P1 project
+# REMOVE_INTEGRATION=$(platform integration:delete -p $P1_PROJECT_ID --yes $P1_INTEGRATION_ID)
+
+# create integration (github api token) on P2 project and catch errors
+(
+  set -e
+  INTEGRATION=$(platform integration:add --type=github --project="$P2_PROJECT_ID" --repository="$P1_INTEGRATION_REPO" --token="$GITHUB_API_TOKEN" --no-interaction -vvv)
+  printf "\nP2 Integration is $INTEGRATION\n"
+)
+errorCode=$?
+if [ $errorCode -ne 0 ]; then
+  echo "We have an error"
+  printf "\nP2 Integration already exists"
+fi
+
+read -p "\nWould you like to transfer domains now (y/n)?: " choice
 case "$choice" in
   y|Y ) steps/project/transfer_domains.sh;
 esac
 
-printf "New project id %s successfully created.\n" "${P2_PROJECT_ID}"
+printf "New project id %s successfully created.\n" "$P2_PROJECT_ID"
+printf "\nhttps://console.platform.sh/${REGION}/${P2_PROJECT_ID}"
