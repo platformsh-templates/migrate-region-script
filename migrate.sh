@@ -134,5 +134,7 @@ case "$choice" in
   y|Y ) steps/project/transfer_domains.sh;
 esac
 
+./steps/project/update_from_title.sh
+
 printf "New project id %s successfully created.\n" "$P2_PROJECT_ID"
 printf "\nhttps://console.platform.sh/${REGION}/${P2_PROJECT_ID}"
