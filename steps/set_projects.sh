@@ -41,4 +41,8 @@ echo $2 > .local/to_id
 create_or_update_variable $1 "$MIGRATION_VAR_NAME" "$MIGRATION_VAL_FROM" project /dev/null
 create_or_update_variable $2 "$MIGRATION_VAR_NAME" "$MIGRATION_VAL_TO" project /dev/null
 
+# we need to redeploy projects for those variable to be available
+redeploy $1
+redeploy $2
+
 echo "[OK] Platform.sh project ids were saved. Please ignore previous prompts to redeploy the project. No additional deploys are required."
