@@ -51,6 +51,12 @@ printf "Project plan is %s\n" "${P1_PLAN}"
 #   - the same env name for production env (default env)
 #   - the same plan
 P2_PROJECT_ID=$(platform project:create --title="$P1_NAME" --region="$REGION" --default-branch="$P1_DEFAULT_BRANCH" --environments=21 --no-interaction --org="$ORGANIZATION" --plan="$P1_PLAN")
+
+if [ "$P2_PROJECT_ID" = "" ]; then
+    echo "\n\n[ERROR] An unexpected error occurs during new project creation, please re-execute migration script\n"
+    return
+fi
+
 printf "New project ID is %s\n" "${P2_PROJECT_ID}"
 
 ##### Clone from P1 to P2
@@ -92,6 +98,13 @@ steps/copy_project.sh
 for ENV in "${P1_ENVS[@]}"; do
     printf "\nCopy env $ENV"
     steps/copy_environment.sh "$ENV"
+
+    # Check if the original env is sleeping (15 days without activity)
+    ENV_SLEEPY_CHECK=$(platform env:info -p "$P1_PROJECT_ID" -e $ENV deployment_state.crons.status)
+    if ["$ENV_SLEEPY_CHECK" = sleeping]; then
+      printf "\nEnv $ENV is sleeping, wake it up with redeploy\n"
+      redeploy $P1_PROJECT_ID $ENV
+    fi
 
     ENV_CHECK=$(platform project:curl -p "$P1_PROJECT_ID" /environments/"$ENV" | jq -r '.status')
     if [ "$ENV_CHECK" = active ]; then
